@@ -14,6 +14,16 @@
     <dependency><groupId>org.primefaces</groupId><artifactId>primefaces</artifactId><version>16.0.2</version></dependency>
     <dependency><groupId>dev.langchain4j</groupId><artifactId>langchain4j</artifactId><version>${langchain4j.version}</version></dependency>
     <dependency><groupId>dev.langchain4j</groupId><artifactId>langchain4j-google-genai</artifactId><version>${langchain4j.beta.version}</version></dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-document-parser-apache-tika</artifactId>
+      <version>${langchain4j.beta.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.langchain4j</groupId>
+      <artifactId>langchain4j-embeddings-bge-small-en-v15</artifactId>
+      <version>${langchain4j.beta.version}</version>
+    </dependency>
     <dependency><groupId>ch.qos.logback</groupId><artifactId>logback-classic</artifactId><version>1.6.6</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>6.1.3</version><scope>test</scope></dependency>
   </dependencies>

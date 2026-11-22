@@ -11,6 +11,7 @@ import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.google.genai.GoogleGenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
@@ -29,15 +30,13 @@ public class LlmClient implements Serializable {
     private static final Logger LOG = Logger.getLogger(LlmClient.class.getName());
     public static final String ROLE_PAR_DEFAUT = "Tu es un assistant utile. Réponds en français de façon claire.";
     private String systemRole = ROLE_PAR_DEFAUT;
+    @Inject private SourcesRag sourcesRag;
     private transient Assistant assistant;
     private transient ChatMemory chatMemory;
 
     public LlmClient() {
         chatMemory = MessageWindowChatMemory.withMaxMessages(20);
         chatMemory.add(SystemMessage.from(systemRole));
-        String cle = cleApi();
-        // La page reste consultable si le serveur n’a pas encore reçu de clé.
-        if (cle != null && !cle.isBlank()) connecter(creerModele(cle));
     }
 
     LlmClient(ChatModel modele) {
@@ -47,10 +46,13 @@ public class LlmClient implements Serializable {
     }
 
     void connecter(ChatModel modele) {
-        assistant = AiServices.builder(Assistant.class)
+        var service = AiServices.builder(Assistant.class)
                 .chatModel(modele)
-                .chatMemory(chatMemory)
-                .build();
+                .chatMemory(chatMemory);
+        if (sourcesRag != null) {
+            service.retrievalAugmentor(sourcesRag.creerAugmentor(modele));
+        }
+        assistant = service.build();
     }
 
     public synchronized void setSystemRole(String role) {
