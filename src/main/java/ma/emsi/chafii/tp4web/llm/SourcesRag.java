@@ -4,6 +4,8 @@ import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.rag.DefaultRetrievalAugmentor;
 import dev.langchain4j.rag.RetrievalAugmentor;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.rag.query.transformer.CompressingQueryTransformer;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -21,6 +23,7 @@ public class SourcesRag {
 
     public RetrievalAugmentor creerAugmentor(ChatModel modele) {
         return DefaultRetrievalAugmentor.builder()
+                .queryTransformer(new CompressingQueryTransformer(modele))
                 .queryRouter(RagSupport.routeurDocuments(modele, cours, mediatheque))
                 .build();
     }
